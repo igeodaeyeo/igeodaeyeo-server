@@ -4,3 +4,19 @@ server:
 spring:
   application:
     name: igeodaeyeo
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3307/igeodaeyeo__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: root
+    password: pass
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+        use_sql_comments: true
