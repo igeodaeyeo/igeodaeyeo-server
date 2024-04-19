@@ -9,10 +9,11 @@ spring:
     active: dev
     include: secret
 
-  driver-class-name: org.mariadb.jdbc.Driver
-  url: '${custom.db.url}'
-  username: '${custom.db.username}'
-  password: '${custom.db.password}'
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: '${custom.db.url}'
+    username: '${custom.db.username}'
+    password: '${custom.db.password}'
 
   jpa:
     hibernate:
