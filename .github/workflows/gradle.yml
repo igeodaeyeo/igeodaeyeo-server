@@ -61,21 +61,21 @@ jobs:
 
     # dockerHub 이미지 푸시
     - name: docker hub push
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo:latest
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
 
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
-        username: ec2-user
+        username: ubuntu
         key: ${{ secrets.PRIVATE_KEY }} # pem 키
         # 도커 작업
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/github-actions-demo:latest
-          docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev ${{ secrets.DOCKER_USERNAME }}/github-actions-demo:latest
-          docker rm $(docker ps --filter 'status=exited' -a -q)
-          docker image prune -a -f
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
+          sudo docker run -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo         
+          docker image prune -f
     
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
