@@ -61,12 +61,13 @@ jobs:
         host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS
         username: ubuntu
         key: ${{ secrets.PRIVATE_KEY }} # pem 키
+        timeout: 2m
         # 도커 작업
         script: |
           sudo docker rm -f $(docker ps -qa)
           sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
-          sudo docker run -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo         
+          sudo docker run -p 80:8080 -d ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo         
           docker image prune -f
     
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
