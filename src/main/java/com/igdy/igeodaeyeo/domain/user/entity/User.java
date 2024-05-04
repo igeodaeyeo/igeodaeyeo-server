@@ -1,4 +1,4 @@
-package com.igdy.igeodaeyeo.domain;
+package com.igdy.igeodaeyeo.domain.user.entity;
 
 import com.igdy.igeodaeyeo.global.BaseEntity;
 import jakarta.persistence.Column;
