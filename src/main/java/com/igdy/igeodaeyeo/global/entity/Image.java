@@ -1,6 +1,5 @@
-package com.igdy.igeodaeyeo.domain.image.entity;
+package com.igdy.igeodaeyeo.global.entity;
 
-import com.igdy.igeodaeyeo.global.BaseEntity;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -8,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @NoArgsConstructor
 @SuperBuilder
-public class ProductImage extends BaseEntity {
+public class Image extends BaseEntity {
 
     private int productId; // product table id
     private String imgOrgNm; // 이미지 원본 이름

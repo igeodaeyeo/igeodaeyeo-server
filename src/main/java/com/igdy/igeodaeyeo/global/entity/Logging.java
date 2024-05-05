@@ -1,6 +1,5 @@
-package com.igdy.igeodaeyeo.domain;
+package com.igdy.igeodaeyeo.global.entity;
 
-import com.igdy.igeodaeyeo.global.BaseEntity;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;

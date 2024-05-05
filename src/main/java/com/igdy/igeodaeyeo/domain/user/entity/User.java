@@ -1,6 +1,6 @@
 package com.igdy.igeodaeyeo.domain.user.entity;
 
-import com.igdy.igeodaeyeo.global.BaseEntity;
+import com.igdy.igeodaeyeo.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
