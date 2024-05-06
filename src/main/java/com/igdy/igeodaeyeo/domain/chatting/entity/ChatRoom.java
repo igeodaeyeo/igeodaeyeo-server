@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @NoArgsConstructor
 @SuperBuilder
-public class Chatroom extends BaseEntity {
+public class ChatRoom extends BaseEntity {
 
     private int productId; // product table id
     private int lenderId; // 빌려주는이 / user table id
