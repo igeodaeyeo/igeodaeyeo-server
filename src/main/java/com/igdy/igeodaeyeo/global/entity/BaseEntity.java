@@ -1,4 +1,4 @@
-package com.igdy.igeodaeyeo.global;
+package com.igdy.igeodaeyeo.global.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
