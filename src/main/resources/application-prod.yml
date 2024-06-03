@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    driver-class-name: '${custom_prod.db.driver-class-name}'
+    url: '${custom_prod.db.url}'
+    username: '${custom_prod.db.username}'
+    password: '${custom_prod.db.password}'
+  jpa:
+    hibernate:
+      ddl-auto: none

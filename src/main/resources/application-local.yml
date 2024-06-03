@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: '${custom_local.db.driver-class-name}'
+    url: '${custom_local.db.url}'
+    username: '${custom_local.db.username}'
+    password: '${custom_local.db.password}'
+  jpa:
+    hibernate:
+      ddl-auto: create

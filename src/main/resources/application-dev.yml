@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: '${custom_dev.db.driver-class-name}'
+    url: '${custom_dev.db.url}'
+    username: '${custom_dev.db.username}'
+    password: '${custom_dev.db.password}'
+  jpa:
+    hibernate:
+      ddl-auto: update
