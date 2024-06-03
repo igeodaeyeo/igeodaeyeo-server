@@ -9,4 +9,4 @@ spring:
     password: '${custom_dev.db.password}'
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
