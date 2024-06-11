@@ -6,7 +6,7 @@ spring:
     name: igeodaeyeo
 
   profiles:
-    active: dev
+    active: local
     include: secret
 
   jpa:
