@@ -11,7 +11,7 @@ spring:
     hibernate:
       ddl-auto: update
   jwt:
-    secret-key: Z01nby0bS7zZXJ9ZXItZGxyamVvYW2yb7JodG1kZ375c3Atam9vbmdhbmduaW0teWVvbHNpbWhpaGFsZ2VveW8K
+    secret-key: ${custom_local.jwt.secret-key}
 #  oauth2:
 #    naver:
 #      secret: ${custom_local.oauth2.naver.secret}
@@ -24,9 +24,9 @@ spring:
       client:
         registration:
           naver:
-              client-id: WWgGDJZG55
-              client-secret: nRe1osZgr9m4Fxy6FoAH
-              redirect-uri: http://localhost:8080/login/oauth2/code/naver
+              client-id: ${custom_local.oauth2.naver.client-id}
+              client-secret: ${custom_local.oauth2.naver.secret}
+              redirect-uri: ${custom_local.oauth2.naver.redirect-url}
               authorization-grant-type: authorization_code
               client-name: Naver
               scope:
