@@ -45,7 +45,10 @@ dependencies {
 }
 
 openapi3 {
-    servers = [ { url = "http://localhost:8080" } ]
+    servers = [
+            { url = "http://localhost:8080" },
+            { url = "http://ec2-43-200-162-117.ap-northeast-2.compute.amazonaws.com" },
+    ]
     title = '이거대여 REST API'
     description = '이거대여 서비스의 API 문서입니다.'
     version = '0.0.1'
