@@ -10,6 +10,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  jwt:
+    secret-key: ${custom_local.jwt.secret-key}
   security:
     oauth2:
       client:
