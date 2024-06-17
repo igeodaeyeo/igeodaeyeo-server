@@ -10,29 +10,20 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-  jwt:
-    secret-key: ${custom_local.jwt.secret-key}
-#  oauth2:
-#    naver:
-#      secret: ${custom_local.oauth2.naver.secret}
-#      client-id: ${custom_local.oauth2.naver.client-id}
-#      url:
-#        auth: https://nid.naver.com
-#        api: https://openapi.naver.com
   security:
     oauth2:
       client:
         registration:
           naver:
-              client-id: ${custom_local.oauth2.naver.client-id}
-              client-secret: ${custom_local.oauth2.naver.secret}
-              redirect-uri: ${custom_local.oauth2.naver.redirect-url}
-              authorization-grant-type: authorization_code
-              client-name: Naver
-              scope:
-                - name
-                - email
-                - nickname
+            client-id: ${custom_local.oauth2.naver.client-id}
+            client-secret: ${custom_local.oauth2.naver.secret}
+            redirect-uri: ${custom_local.oauth2.naver.redirect-url}
+            authorization-grant-type: authorization_code
+            client-name: Naver
+            scope:
+              - name
+              - email
+              - nickname
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
