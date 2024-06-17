@@ -55,10 +55,14 @@ public class SecurityConfig {
                 // request 인증, 인가 설정
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
-                                new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/login/**"),
-                                new AntPathRequestMatcher("/auth/**")
-                        ).permitAll()
+                                        new AntPathRequestMatcher("/"),
+                                        new AntPathRequestMatcher("/login/**"),
+                                        new AntPathRequestMatcher("/auth/**"),
+                                        new AntPathRequestMatcher("/docs/**"),
+                                        new AntPathRequestMatcher("/example/**"),
+                                        new AntPathRequestMatcher("/swagger-ui/**"),
+                                        new AntPathRequestMatcher("/v3/api-docs/**")
+                                ).permitAll()
                                 .anyRequest().authenticated()
                 )
 
@@ -67,11 +71,11 @@ public class SecurityConfig {
 //                        .authorizationEndpoint(authorization -> authorization
 //                                .baseUri("/api/v1/auth/oauth2")   // oauth2 인증 요청 주소 커스텀 가능
 //                        )
-                        // 로그인 성공 이후 사용자 정보를 가져올 때의 설정
-                        .userInfoEndpoint(userInfo ->
-                            userInfo.userService(oAuth2UserService)
-                        )
-                        .successHandler(oAuth2SuccessHandler)
+                                // 로그인 성공 이후 사용자 정보를 가져올 때의 설정
+                                .userInfoEndpoint(userInfo ->
+                                        userInfo.userService(oAuth2UserService)
+                                )
+                                .successHandler(oAuth2SuccessHandler)
                 )
 
                 // jwt 관련 설정
