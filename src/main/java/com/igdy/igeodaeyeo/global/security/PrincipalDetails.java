@@ -10,20 +10,20 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-public record PrincipalDetails (
-        User user,
-        Map<String, Object> attributes,
-        String attributeKey
-) implements OAuth2User, UserDetails {
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
-    @Override
-    public String getName() {
-        return attributes.get(attributeKey).toString();
+    private User user;
+    private Map<String, Object> attributes;
+
+    // 일반 로그인 생성자
+    public PrincipalDetails(User user) {
+        this.user = user;
     }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes;
+    // OAuth 로그인 생성자
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
     }
 
     @Override
@@ -39,7 +39,7 @@ public record PrincipalDetails (
 
     @Override
     public String getUsername() {
-        return user.getNickname();
+        return user.getLoginId();
     }
 
     @Override
@@ -62,4 +62,13 @@ public record PrincipalDetails (
         return true;
     }
 
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
 }
