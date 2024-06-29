@@ -9,40 +9,40 @@ import java.util.Map;
 public class NaverUserInfo implements OAuth2UserInfo {
 
     private Map<String, Object> attributes; // -> oauth2User.getAttributes()
+    private Map<String, Object> response;
 
     public NaverUserInfo(Map<String, Object> attributes) {
         this.attributes = attributes;
+        this.response = (Map<String, Object>) attributes.get("response");
     }
 
     @Override
     public String getProviderId() {
-        return (String) attributes.get("id");
+        return response.get("id").toString();
     }
 
     @Override
-    public String getGetProvider() {
+    public String getProvider() {
         return "naver";
     }
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("email");
+        return response.get("email").toString();
     }
 
     @Override
     public String getName() {
-        return (String) attributes.get("name");
+        return response.get("name").toString();
     }
 
     @Override
     public String getNickname() {
-        return (String) attributes.get("nickname");
+        return response.get("nickname").toString();
     }
 
     @Override
     public User toEntity() {
-        System.out.println(getEmail());
-
         return User.builder()
                 .loginId(getEmail())
                 .nickname(getNickname())

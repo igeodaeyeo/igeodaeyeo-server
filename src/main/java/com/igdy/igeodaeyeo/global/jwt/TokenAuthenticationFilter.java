@@ -32,6 +32,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         // request header에서 access token 가져오기
         String accessToken = resolveToken(request);
+        System.out.println("access token: " + accessToken);
 
         // access token 검증
         if (StringUtils.hasText(accessToken) && tokenProvider.validateToken(accessToken)) {
@@ -40,28 +41,28 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // print name, email, nickname
-            System.out.println("name: " + authentication.getName());
+            System.out.println("access token 검증 성공! name: " + authentication.getName());
         }
-//        else {
-//            // 만료되었을 경우 access token 재발급
-//            String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
-//
-//            if (StringUtils.hasText(reissueAccessToken)) {
-//                setAuthentication(reissueAccessToken);
-//
-//                // 재발급된 access token 다시 전달
-//                response.setHeader("Authorization", "Bearer " + reissueAccessToken);
-//            }
-//        }
+        else {
+            // 만료되었을 경우 access token 재발급
+            String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
+
+            if (StringUtils.hasText(reissueAccessToken)) {
+                Authentication authentication = tokenProvider.getAuthentication(reissueAccessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // 재발급된 access token 다시 전달
+                response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + reissueAccessToken);
+            }
+        }
 
         filterChain.doFilter(request, response);
     }
 
     // request header에서 토큰 정보 가져오기
     private String resolveToken(HttpServletRequest request) {
-        System.out.println("resolveToken: " + request.getHeader(AUTHORIZATION_HEADER));
-        // print request url
-        System.out.println("request url: " + request.getRequestURL());
+//        System.out.println("resolveToken: " + request.getHeader(AUTHORIZATION_HEADER));
+//        System.out.println("request url: " + request.getRequestURL());
 
         String token = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {

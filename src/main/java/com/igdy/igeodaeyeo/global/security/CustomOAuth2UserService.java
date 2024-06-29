@@ -44,17 +44,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 4. user 정보 dto 생성
         OAuth2UserInfo oAuth2UserInfo = null;
         if (registrationId.equals("naver")) {
-            oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
-            System.out.println("create OAuth2UserInfo dto");
+            oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes());
+        } else if (registrationId.equals("kakao")) {
+            oAuth2UserInfo = new KakaoUserInfo((Map<String, Object>) oAuth2User.getAttributes());
         } else {
-            System.out.println("registrationId: " + registrationId);
+            System.out.println("else registrationId: " + registrationId);
         }
 
         // 5. 회원가입 및 로그인
         User user = getOrSave(oAuth2UserInfo);
 
         // 6. OAuth2User로 변환
-        return new PrincipalDetails(user, oAuth2User.getAttributes(), userNameAttributeName);
+        return new PrincipalDetails(user, oAuth2User.getAttributes());
     }
 
     private User getOrSave(OAuth2UserInfo oAuth2UserInfo) {
