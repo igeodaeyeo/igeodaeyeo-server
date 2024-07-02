@@ -3,6 +3,7 @@ package com.igdy.igeodaeyeo.global.config;
 import com.igdy.igeodaeyeo.global.jwt.JwtAccessDeniedHandler;
 import com.igdy.igeodaeyeo.global.jwt.JwtAuthenticationEntryPoint;
 import com.igdy.igeodaeyeo.global.jwt.TokenAuthenticationFilter;
+import com.igdy.igeodaeyeo.global.jwt.TokenExceptionFilter;
 import com.igdy.igeodaeyeo.global.security.CustomOAuth2UserService;
 import com.igdy.igeodaeyeo.global.security.OAuth2SuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
@@ -79,7 +80,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // csrf 비활성화 -> cookie를 사용하지 않으면 꺼도 됨
                 .httpBasic(AbstractHttpConfigurer::disable)  // 기본 인증 로그인 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)  // 기본 폼 로그인 비활성화
-//                .logout(AbstractHttpConfigurer::disable)  // 기본 로그아웃 비활성화
+                .logout(AbstractHttpConfigurer::disable)  // 기본 로그아웃 비활성화
                 .headers(c -> c.frameOptions(
                         HeadersConfigurer.FrameOptionsConfig::disable).disable())  // X-Frame-Options 비활성화
                 .sessionManagement(c ->
@@ -110,8 +111,8 @@ public class SecurityConfig {
                 // jwt 관련 설정: 메 요청마다 header로 오는 access token 검증
                 .addFilterBefore(tokenAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(new TokenExceptionFilter(),
-//                        tokenAuthenticationFilter.getClass())   // 토큰 예외 핸들링
+                .addFilterBefore(new TokenExceptionFilter(),
+                        tokenAuthenticationFilter.getClass())   // 토큰 예외 핸들링
 
                 // 인증 예외 핸들링
                 .exceptionHandling(e -> e

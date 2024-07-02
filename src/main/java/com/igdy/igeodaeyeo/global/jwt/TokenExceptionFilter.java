@@ -1,5 +1,6 @@
 package com.igdy.igeodaeyeo.global.jwt;
 
+import com.igdy.igeodaeyeo.global.exception.TokenException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +19,8 @@ public class TokenExceptionFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+        } catch (TokenException e) {
+            response.sendError(e.getErrorCode().getHttpStatus().value(), e.getMessage());
         }
     }
 }
