@@ -1,7 +1,6 @@
 package com.igdy.igeodaeyeo.global.jwt;
 
 import com.igdy.igeodaeyeo.global.exception.ErrorCode;
-import com.igdy.igeodaeyeo.global.exception.TokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 public class TokenProvider {
     // 토큰 발급
 
-    private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;           // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 30; // 30일
     private static final String KEY_ROLE = "role";
