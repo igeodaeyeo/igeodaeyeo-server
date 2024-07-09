@@ -59,7 +59,7 @@ openapi3 {
     version = '0.0.1'
     format = 'json'
     outputFileNamePrefix = 'igdy-api-spec'
-//    outputDirectory = layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path
+    outputDirectory = layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path
 }
 
 tasks.withType(GenerateSwaggerUI).configureEach {
@@ -72,14 +72,14 @@ tasks.named('bootJar') {
 }
 
 task copySwaggerDocs(type: Copy) {
-    from layout.buildDirectory.dir("api-spec").get().asFile.path
+    from layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path
     into "src/main/resources/static/docs/"
     dependsOn 'openapi3'
 }
 
 tasks.register('createStaticDocsDir') {
     doLast {
-        def outputDir = file(layout.buildDirectory.dir("api-spec").get().asFile.path)
+        def outputDir = file(layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path)
         if (!outputDir.exists()) {
             outputDir.mkdirs()
         }
