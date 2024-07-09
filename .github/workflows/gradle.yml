@@ -37,7 +37,8 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew build -x test
+#      run: ./gradlew build -x test
+      run: ./gradlew build # The Swagger API specification requires test code to run.
 
 
     # dockerHub login
