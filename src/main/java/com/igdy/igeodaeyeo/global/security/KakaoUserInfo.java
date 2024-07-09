@@ -2,6 +2,7 @@ package com.igdy.igeodaeyeo.global.security;
 
 import com.igdy.igeodaeyeo.domain.user.entity.Role;
 import com.igdy.igeodaeyeo.domain.user.entity.User;
+import com.igdy.igeodaeyeo.global.utils.KeyGenerator;
 
 import java.util.Map;
 
@@ -35,13 +36,12 @@ public class KakaoUserInfo implements OAuth2UserInfo{
 
     @Override
     public User toEntity() {
-        System.out.println(getEmail());
-
         return User.builder()
                 .loginId(getEmail())
                 .nickname(getNickname())
                 .oAuthProvider(OAuthProvider.KAKAO)
                 .role(Role.USER)
+                .userKey(KeyGenerator.generateKey())
                 .build();
     }
 
