@@ -59,7 +59,7 @@ openapi3 {
     version = '0.0.1'
     format = 'json'
     outputFileNamePrefix = 'igdy-api-spec'
-    outputDirectory = "build/resources/main/static/docs"
+    outputDirectory = "src/main/resources/main/static/docs"
 }
 
 tasks.withType(GenerateSwaggerUI).configureEach {
