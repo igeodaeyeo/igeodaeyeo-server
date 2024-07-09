@@ -32,7 +32,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         // request header에서 access token 가져오기
         String accessToken = resolveToken(request);
-        System.out.println("access token: " + accessToken);
 
         // access token 검증
         if (StringUtils.hasText(accessToken) && tokenProvider.validateToken(accessToken)) {
@@ -41,7 +40,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // print name, email, nickname
-            System.out.println("access token 검증 성공! name: " + authentication.getName());
+            System.out.println("access token 검증 성공!");
         }
         else {
             // 만료되었을 경우 access token 재발급

@@ -1,6 +1,5 @@
 package com.igdy.igeodaeyeo.global.jwt;
 
-import com.igdy.igeodaeyeo.global.exception.TokenException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

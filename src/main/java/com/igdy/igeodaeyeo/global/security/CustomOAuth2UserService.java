@@ -1,17 +1,15 @@
 package com.igdy.igeodaeyeo.global.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igdy.igeodaeyeo.domain.user.entity.User;
 import com.igdy.igeodaeyeo.domain.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import com.igdy.igeodaeyeo.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 // 로그인 정보 가져와 가공하기
 @RequiredArgsConstructor
@@ -28,12 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 1. user 정보 가져오기
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        try {
-            System.out.println(new ObjectMapper().writeValueAsString(oAuth2User.getAttributes()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         // 2. registrationId 가져오기 (third-party id) -> for google, kakao
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
@@ -42,13 +34,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
         // 4. user 정보 dto 생성
-        OAuth2UserInfo oAuth2UserInfo = null;
+        OAuth2UserInfo oAuth2UserInfo;
         if (registrationId.equals("naver")) {
-            oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes());
+            oAuth2UserInfo = new NaverUserInfo(oAuth2User.getAttributes());
         } else if (registrationId.equals("kakao")) {
-            oAuth2UserInfo = new KakaoUserInfo((Map<String, Object>) oAuth2User.getAttributes());
+            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         } else {
-            System.out.println("else registrationId: " + registrationId);
+            throw new AuthException(ErrorCode.ILLEGAL_REGISTRATION_ID);
         }
 
         // 5. 회원가입 및 로그인

@@ -26,6 +26,7 @@ public class User extends BaseEntity {
     private String sex;
 //    private String email;
     private OAuthProvider oAuthProvider;
+    private String userKey;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;

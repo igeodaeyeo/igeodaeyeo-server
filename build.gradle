@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
-    id "com.epages.restdocs-api-spec" version '0.19.2'
+    id 'com.epages.restdocs-api-spec' version '0.19.2'
     id 'org.hidetake.swagger.generator' version '2.19.2'
 }
 
@@ -59,7 +59,7 @@ openapi3 {
     version = '0.0.1'
     format = 'json'
     outputFileNamePrefix = 'igdy-api-spec'
-    outputDirectory = "build/resources/main/static/docs"
+    outputDirectory = layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path
 }
 
 tasks.withType(GenerateSwaggerUI).configureEach {
@@ -71,10 +71,30 @@ tasks.named('bootJar') {
     finalizedBy 'copySwaggerDocs'
 }
 
-task copySwaggerDocs(type: Copy) {
-    from "build/resources/main/static/docs"
+tasks.register('copySwaggerDocs', Copy) {
+    from layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path
     into "src/main/resources/static/docs/"
-    dependsOn 'openapi3'
+}
+
+tasks.register('createStaticDocsDir') {
+    doLast {
+        def outputDir = file(layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path)
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
+        def outputFile = new File(outputDir, "igdy-api-spec.json")
+        if (!outputFile.exists()) {
+            outputFile.createNewFile()
+        }
+    }
+}
+
+tasks.named('test').configure {
+    finalizedBy 'createStaticDocsDir'
+}
+
+tasks.named('createStaticDocsDir').configure {
+    finalizedBy 'openapi3'
 }
 
 tasks.named('test') {
