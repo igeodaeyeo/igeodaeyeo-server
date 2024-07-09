@@ -38,7 +38,7 @@ jobs:
 
     - name: Build with Gradle
 #      run: ./gradlew build -x test
-      run: ./gradlew build # The Swagger API specification requires test code to run.
+      run: ./gradlew build --warning-mode all # The Swagger API specification requires test code to run.
 
 
     # dockerHub login
