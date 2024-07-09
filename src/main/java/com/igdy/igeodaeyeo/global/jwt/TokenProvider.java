@@ -1,5 +1,7 @@
 package com.igdy.igeodaeyeo.global.jwt;
 
+import com.igdy.igeodaeyeo.global.exception.ErrorCode;
+import com.igdy.igeodaeyeo.global.exception.TokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,16 +27,16 @@ public class TokenProvider {
 
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;           // 30분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7; // 7일
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 30; // 30일
     private static final String KEY_ROLE = "role";
-    private final RefreshTokenRepository refreshTokenRepository;
 
     private final Key key;
+    private final TokenService tokenService;
 
-    public TokenProvider(@Value("${spring.jwt.secret-key}") String secretKey, RefreshTokenRepository refreshTokenRepository) {
-        this.refreshTokenRepository = refreshTokenRepository;
+    public TokenProvider(@Value("${spring.jwt.secret-key}") String secretKey, TokenService tokenService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.tokenService = tokenService;
     }
 
     public String generateAccessToken(Authentication authentication) {
@@ -45,12 +47,8 @@ public class TokenProvider {
     public void generateRefreshToken(Authentication authentication, String accessToken) {
 
         // db에 refresh token 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(accessToken)
-                .value(generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME))
-                .build();
-
-//        refreshTokenRepository.save(refreshToken);
+        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
+        tokenService.saveOrUpdate(authentication.getName(), accessToken, refreshToken);
     }
 
     private String generateToken(Authentication authentication, long expireTime) {
@@ -70,19 +68,6 @@ public class TokenProvider {
                 .compact();
     }
 
-    public TokenDto generateTokenDto(Authentication authentication) {
-        String accessToken = generateAccessToken(authentication);
-        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
-        Date accessTokenExpiresIn = new Date((new Date()).getTime() + ACCESS_TOKEN_EXPIRE_TIME);
-
-        return TokenDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .grantType(BEARER_TYPE)
-                .expiresIn(accessTokenExpiresIn.getTime())
-                .build();
-    }
-
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
         List<SimpleGrantedAuthority> authorities = getAuthorities(claims);
@@ -100,49 +85,23 @@ public class TokenProvider {
 
     // 3. access token은 db에 저장된 refresh token을 통해 재발급
     public String reissueAccessToken(String accessToken) {
-//        System.out.println("access token passed to reissueAccessToken method: " + accessToken);
+        System.out.println("access token 재발급");
         
         if (StringUtils.hasText(accessToken)) {
-            RefreshToken refreshToken = refreshTokenRepository.findByKey(accessToken)
-                    .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+            Token token = tokenService.findByAccessTokenOrThrow(accessToken);
+            String refreshToken = token.getRefreshToken();
 
-            if (validateToken(refreshToken.getValue())) {
-                String reissueAccessToken = generateAccessToken(getAuthentication(refreshToken.getValue()));
-                refreshToken.updateToken(reissueAccessToken, refreshToken.getValue());
+            if (validateToken(refreshToken)) {
+                String reissueAccessToken = generateAccessToken(getAuthentication(refreshToken));
+                tokenService.updateToken(reissueAccessToken, token);
                 return reissueAccessToken;
             } else {
                 System.out.println("refresh token이 유효하지 않습니다.");
             }
-        } else {
-            System.out.println("유효하지 않은 access token입니다.");
         }
+
         return null;
 
-//        // 1. refresh token 검증
-//        if (!validateToken(refreshToken)) {
-//            throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
-//        }
-//
-//        // 2. access token에서 member id 가져오기
-//        Authentication authentication = getAuthentication(accessToken);
-//
-//        // 3. 저장소에서 member id를 기반으로 refresh token 값 가져오기
-//        RefreshToken refreshToken = refreshTokenRepository.findByKey(accessToken)
-//                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-//
-//        // 4. refresh token 일치하는지 검사
-////        if (!refreshToken.getValue().equals(accessToken)) {
-////            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
-////        }
-//
-//        // 5. 새로운 토큰 생성
-//        TokenDto tokenDto = generateTokenDto(authentication);
-//
-//        // 6. 저장소 정보 업데이트
-//        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-//        refreshTokenRepository.save(newRefreshToken);
-//
-//        return tokenDto.getAccessToken();
     }
 
     public boolean validateToken(String token) {
@@ -163,15 +122,10 @@ public class TokenProvider {
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
-        } catch (MalformedJwtException | SecurityException e) {
-            System.out.println("잘못된 JWT 토큰입니다.");
-            return null;
-        } catch (UnsupportedJwtException e) {
-            System.out.println("지원되지 않는 JWT 서명입니다.");
-            return null;
-        } catch (IllegalArgumentException e) {
-            System.out.println("JWT 토큰이 잘못되었습니다.");
-            return null;
+        } catch (MalformedJwtException e) {
+            throw new TokenException(ErrorCode.INVALID_TOKEN);
+        } catch (SecurityException e) {
+            throw new TokenException(ErrorCode.INVALID_JWT_SIGNATURE);
         }
     }
 }

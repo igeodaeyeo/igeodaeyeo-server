@@ -35,4 +35,8 @@ public class User extends BaseEntity {
         this.nickname = nickname;
         this.oAuthProvider = oAuthProvider;
     }
+
+    public void changeNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
 }
