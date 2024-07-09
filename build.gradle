@@ -66,6 +66,16 @@ tasks.withType(GenerateSwaggerUI).configureEach {
     dependsOn 'openapi3'
 }
 
+tasks.register('createStaticDocsDir') {
+    finalizedBy 'openapi3'
+    doLast {
+        def outputDir = file(layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path)
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
+    }
+}
+
 tasks.named('bootJar') {
     dependsOn 'openapi3'
 //    finalizedBy 'copySwaggerDocs'
