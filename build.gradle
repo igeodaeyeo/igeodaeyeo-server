@@ -73,6 +73,10 @@ tasks.register('createStaticDocsDir') {
         if (!outputDir.exists()) {
             outputDir.mkdirs()
         }
+        def outputFile = new File(outputDir, "igdy-api-spec.json")
+        if (!outputFile.exists()) {
+            outputFile.createNewFile()
+        }
     }
 }
 
