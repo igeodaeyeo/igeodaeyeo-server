@@ -68,14 +68,14 @@ tasks.withType(GenerateSwaggerUI).configureEach {
 
 tasks.named('bootJar') {
     dependsOn 'openapi3'
-    finalizedBy 'copySwaggerDocs'
+//    finalizedBy 'copySwaggerDocs'
 }
 
-task copySwaggerDocs(type: Copy) {
-    from "build/resources/main/static/docs"
-    into "src/main/resources/static/docs/"
-    dependsOn 'openapi3'
-}
+//task copySwaggerDocs(type: Copy) {
+//    from "build/resources/main/static/docs"
+//    into "src/main/resources/static/docs/"
+//    dependsOn 'openapi3'
+//}
 
 tasks.named('test') {
     useJUnitPlatform()
