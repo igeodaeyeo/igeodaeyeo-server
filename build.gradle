@@ -71,10 +71,9 @@ tasks.named('bootJar') {
     finalizedBy 'copySwaggerDocs'
 }
 
-task copySwaggerDocs(type: Copy) {
+tasks.register('copySwaggerDocs', Copy) {
     from layout.buildDirectory.dir("resources/main/static/docs").get().asFile.path
     into "src/main/resources/static/docs/"
-    dependsOn 'openapi3'
 }
 
 tasks.register('createStaticDocsDir') {
