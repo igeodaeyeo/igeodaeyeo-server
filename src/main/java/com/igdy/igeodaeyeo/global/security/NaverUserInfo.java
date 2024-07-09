@@ -2,7 +2,7 @@ package com.igdy.igeodaeyeo.global.security;
 
 import com.igdy.igeodaeyeo.domain.user.entity.Role;
 import com.igdy.igeodaeyeo.domain.user.entity.User;
-import com.igdy.igeodaeyeo.global.security.OAuthProvider;
+import com.igdy.igeodaeyeo.global.utils.KeyGenerator;
 
 import java.util.Map;
 
@@ -49,6 +49,7 @@ public class NaverUserInfo implements OAuth2UserInfo {
                 .realName(getName())
                 .oAuthProvider(OAuthProvider.NAVER)
                 .role(Role.USER)
+                .userKey(KeyGenerator.generateKey())
                 .build();
     }
 
