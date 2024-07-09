@@ -77,6 +77,27 @@ task copySwaggerDocs(type: Copy) {
     dependsOn 'openapi3'
 }
 
+tasks.register('createStaticDocsDir') {
+    doLast {
+        def outputDir = file(layout.buildDirectory.dir("api-spec").get().asFile.path)
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
+        def outputFile = new File(outputDir, "igdy-api-spec.json")
+        if (!outputFile.exists()) {
+            outputFile.createNewFile()
+        }
+    }
+}
+
+tasks.named('test').configure {
+    finalizedBy 'createStaticDocsDir'
+}
+
+tasks.named('createStaticDocsDir').configure {
+    finalizedBy 'openapi3'
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
