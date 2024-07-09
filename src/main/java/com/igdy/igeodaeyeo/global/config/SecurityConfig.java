@@ -88,9 +88,13 @@ public class SecurityConfig {
                 // request 인증, 인가 설정
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
-                                new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/auth/**")
-                        ).permitAll()
+                                        new AntPathRequestMatcher("/"),
+                                        new AntPathRequestMatcher("/auth/**"),
+                                        new AntPathRequestMatcher("/docs/**"),
+                                        new AntPathRequestMatcher("/example/**"),
+                                        new AntPathRequestMatcher("/swagger-ui/**"),
+                                        new AntPathRequestMatcher("/v3/api-docs/**")
+                                ).permitAll()
                                 .anyRequest().authenticated()
                 )
 
@@ -104,15 +108,15 @@ public class SecurityConfig {
                                         userInfo.userService(oAuth2UserService)
                                 )
                                 .successHandler(oAuth2SuccessHandler)
-                        // oauth2 인증 요청 주소 커스텀
-                        .authorizationEndpoint(endpoint -> endpoint
-                                .baseUri("/api/v1/auth/oauth2")
-                        )
-                        // 로그인 성공 이후 사용자 정보를 가져올 때의 설정
-                        .userInfoEndpoint(userInfo ->
-                            userInfo.userService(oAuth2UserService)
-                        )
-                        .successHandler(oAuth2SuccessHandler)
+                                // oauth2 인증 요청 주소 커스텀
+                                .authorizationEndpoint(endpoint -> endpoint
+                                        .baseUri("/api/v1/auth/oauth2")
+                                )
+                                // 로그인 성공 이후 사용자 정보를 가져올 때의 설정
+                                .userInfoEndpoint(userInfo ->
+                                        userInfo.userService(oAuth2UserService)
+                                )
+                                .successHandler(oAuth2SuccessHandler)
                 )
 
                 // jwt 관련 설정: 메 요청마다 header로 오는 access token 검증
