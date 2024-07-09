@@ -1,10 +1,9 @@
 package com.igdy.igeodaeyeo.global.jwt;
 
 import com.igdy.igeodaeyeo.global.exception.ErrorCode;
-import com.igdy.igeodaeyeo.global.exception.TokenException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -13,10 +12,10 @@ public class TokenService {
     private final TokenRepository tokenRepository;
 
     @Transactional
-    public void saveOrUpdate(String memberKey, String accessToken, String refreshToken) {
+    public void saveOrUpdate(String userKey, String accessToken, String refreshToken) {
         Token token = tokenRepository.findByAccessToken(accessToken)
                 .map(t -> t.updateRefreshToken(refreshToken))
-                .orElseGet(() -> new Token(memberKey, accessToken, refreshToken));
+                .orElseGet(() -> new Token(userKey, accessToken, refreshToken));
 
         tokenRepository.save(token);
     }
@@ -32,7 +31,7 @@ public class TokenService {
                 .orElseThrow(() -> new TokenException(ErrorCode.TOKEN_EXPIRED));
     }
 
-    public void deleteRefreshToken(String memberKey) {
-        tokenRepository.deleteById(memberKey);
+    public void deleteRefreshToken(String userKey) {
+        tokenRepository.deleteById(userKey);
     }
 }
