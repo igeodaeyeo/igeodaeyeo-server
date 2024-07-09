@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
+    id "com.epages.restdocs-api-spec" version '0.19.2'
+    id 'org.hidetake.swagger.generator' version '2.19.2'
 }
 
 group = 'com.igdy'
@@ -42,9 +44,38 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'com.h2database:h2'
     runtimeOnly 'com.h2database:h2'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+}
 
+openapi3 {
+    servers = [
+            { url = "http://localhost:8080" },
+            { url = "http://ec2-43-200-162-117.ap-northeast-2.compute.amazonaws.com" },
+    ]
+    title = '이거대여 REST API'
+    description = '이거대여 서비스의 API 문서입니다.'
+    version = '0.0.1'
+    format = 'json'
+    outputFileNamePrefix = 'igdy-api-spec'
+    outputDirectory = "build/resources/main/static/docs"
+}
+
+tasks.withType(GenerateSwaggerUI).configureEach {
+    dependsOn 'openapi3'
+
+    delete file('src/main/resources/static/docs/')
+    copy {
+        from "build/resources/main/static/docs"
+        into "src/main/resources/static/docs/"
+    }
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    dependsOn ':openapi3'
 }
