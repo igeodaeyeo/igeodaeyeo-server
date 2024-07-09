@@ -39,4 +39,3 @@ out/
 ### Custom ###
 application-secret.yml
 src/main/generated
-/src/main/resources/static/docs/igdy-api-spec.json
